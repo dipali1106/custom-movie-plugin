@@ -8,7 +8,7 @@
    text-domain : movie-data
    *Tags: Custom Post-type, Custom Taxonomy
    */
-   
+
    //exit if accessed directly
 if(! defined('ABSPATH') ) exit;
 
@@ -83,7 +83,7 @@ class CustomMovieData{
 		    'add_new_item' => __( 'Add New Genre', 'movie-data' ),
 		    'new_item_name' => __( 'New Genre Name', 'movie-data' ),
 		    'separate_items_with_commas' => __( 'Separate Genres with commas','movie-data' ),
-		    'add_or_remove_items' => __( 'Add or remove Genres' ),
+		    'add_or_remove_items' => __( 'Add or remove Genres','movie-data' ),
 		    'choose_from_most_used' => __( 'Choose from the most used Genres', 'movie-data' ),
 		    'menu_name' => __( 'Genres', 'movie-data' ),
 		  ); 
@@ -106,6 +106,8 @@ class CustomMovieData{
 	public static function movieAction($atts,$content=null){
 		wp_register_script('script', plugin_dir_url( __FILE__ ) . 'asset/script.js' ,array(),true);
       	wp_enqueue_script('script');
+      	wp_register_script('load-data', plugin_dir_url( __FILE__ ) . 'asset/loaddata.js' ,array(),true);
+      	wp_enqueue_script('load-data');
 		wp_enqueue_style( 'style-css', plugin_dir_url( __FILE__ ) .'asset/mystyle.css' );
   ?>
 
@@ -116,12 +118,11 @@ class CustomMovieData{
 	  	
 	  	<button class="button" onclick="showDelete()"><?php _e('Delete Movies', 'movie-data') ?></button>
 	  	
-	  </div>
-  	
-
  
   <div class="add-movie" id="addMovie" style="display:none">
   	<form  action="" id="add-movie" method="post" >
+  		<?php wp_nonce_field( 'add-post' ); ?>
+
 	  	<div class="form-group">
 	  		<label for="name"><?php _e('Movie Name:', 'movie-data') ?></label>
 	  		<input type="text" class="form-control" placeholder="<?php _e('Enter Movie Name', 'movie-data') ?>" id="name" name="movie_name" required>
@@ -164,7 +165,7 @@ class CustomMovieData{
 
   <?php
   global $wpdb;
-  if(isset($_POST['save-btn']))
+  if(isset($_POST['save-btn'])&& isset($_REQUEST['_wpnonce']) && wp_verify_nonce( $_REQUEST['_wpnonce'], 'add-post' ) )
   {
   	$name=$_POST['movie_name'];
     $movie_desc=$_POST['movie_desc'];
@@ -252,7 +253,9 @@ wp_reset_postdata();
 
                 <div class="grid-item">
                 	<form method="post" action="">
+                		<?php wp_nonce_field( 'delete-post'.get_the_ID() ); ?>
                 <table>
+                	
                 	<input type="hidden" name="id" value="<?php the_ID() ?>" >
                  <tr>
                  <th width="130"><?php  _e('Movie Title','movie-data') ?> </th>
@@ -266,8 +269,8 @@ wp_reset_postdata();
                 </form>
               </div>    
        <?php
-	       
-	       	if(isset($_POST['btn-2'])){
+	       if ( isset($_POST['btn-2']) && isset($_REQUEST['_wpnonce'])  && wp_verify_nonce( $_REQUEST['_wpnonce'], 'delete-post'.get_the_ID()  ) )
+	       {       	
 	       		
 	       	echo "<script type='text/javascript'>
 	        window.location=document.location.href;
@@ -281,6 +284,7 @@ wp_reset_postdata();
 	       	wp_reset_postdata();
 	       
 	      		 }
+
 	 		  
             }
         } 
@@ -290,6 +294,7 @@ wp_reset_postdata();
           <p><?php _e('Sorry, no movies found.','movie-data'); ?></p>
           <?php
             } 
+
           ?>
     </div>
 </div>
@@ -325,6 +330,7 @@ wp_reset_postdata();
                 <div class="grid-item">
                 <form method="post" action="">
                 	<table>
+                		
                 	<input type="hidden" name="id" value="<?php the_ID() ?>" >
 	                <tr>
 	                <th width="130"> <?php _e('Movie Title', 'movie-data') ?> </th>
@@ -364,6 +370,7 @@ wp_reset_postdata();
 	       		  	<div class="edit-movie-form" >
   					
   					<form  action="" id="edit-movie" method="post" >
+  						<?php// wp_nonce_field( 'edit-post' ); ?>
 				  		<div class="form-group">
 					  		<label for="name"><?php _e('Movie Name:', 'movie-data') ?></label>
 					  		<input type="hidden" id="post_id" name="id" value="<?php echo $id ?>">

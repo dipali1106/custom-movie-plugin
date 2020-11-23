@@ -8,7 +8,7 @@ function showAdd(){
           y.style.display="none";
           z.style.display="none";
           titles.style.display="block";
-          editForm.style.display="none";
+          //editForm.style.display="none";
         } else {
           x.style.display = "none";
         }
@@ -27,9 +27,9 @@ function showAdd(){
           titles.style.display="none";
         } else {
           z.style.display = "none";
-          editForm.style.display="none";
+          //editForm.style.display="none";
           titles.style.display="block";
-          
+
         }
       }
       function showDelete(){
