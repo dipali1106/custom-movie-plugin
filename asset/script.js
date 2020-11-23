@@ -29,6 +29,7 @@ function showAdd(){
           z.style.display = "none";
           editForm.style.display="none";
           titles.style.display="block";
+          
         }
       }
       function showDelete(){

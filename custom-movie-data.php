@@ -8,6 +8,7 @@
    text-domain : movie-data
    *Tags: Custom Post-type, Custom Taxonomy
    */
+   
    //exit if accessed directly
 if(! defined('ABSPATH') ) exit;
 
@@ -360,7 +361,7 @@ wp_reset_postdata();
 		       			
 		       			
 		       			?>
-	       		  	<div class="edit-movie-form" id="edit-movie-form">
+	       		  	<div class="edit-movie-form" >
   					
   					<form  action="" id="edit-movie" method="post" >
 				  		<div class="form-group">
